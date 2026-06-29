@@ -2,6 +2,7 @@
 
 
 
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -104,13 +105,8 @@
             </div>
 
             <div class="form-group">
-                <label>Case ID (Short):</label>
-                <input type="text" id="caseIdShort" placeholder="e.g. 2039-A">
-            </div>
-
-            <div class="form-group">
-                <label>Case ID Full Number / Letter ID:</label>
-                <input type="text" id="caseIdFull" placeholder="e.g. SLR-2039-A-XL-4920">
+                <label>Case ID (Full Number / Letter ID):</label>
+                <input type="text" id="caseIdFull" placeholder="e.g. SLR-2039-A-XL-4920" required>
             </div>
 
             <div class="form-group">
@@ -134,7 +130,7 @@ document.getElementById("appealForm").addEventListener("submit", function(e) {
     let appealText = document.getElementById("whyUnban").value.toLowerCase();
     let score = 0;
 
-    const positiveKeywords = ["sorry", "apologise", "apology", "improve", "promise", "won't happen", "won’t happen", "changed", "change"];
+    const positiveKeywords = ["sorry", "apologise", "apology", "improve", "promise", "won't happen", "changed", "change"];
     const negativeKeywords = ["staff abuse", "exploiting", "ddos", "threat", "alt", "ban evasion"];
 
     positiveKeywords.forEach(word => { if (appealText.includes(word)) score += 2; });
@@ -171,8 +167,7 @@ document.getElementById("appealForm").addEventListener("submit", function(e) {
                     { name: "Roblox User", value: document.getElementById("robloxUser").value },
                     { name: "Roblox ID", value: document.getElementById("robloxId").value },
                     { name: "Reason for Ban", value: document.getElementById("reasonBan").value },
-                    { name: "Case ID (Short)", value: document.getElementById("caseIdShort").value || "Not Provided" },
-                    { name: "Case ID Full Number / Letter ID", value: document.getElementById("caseIdFull").value || "Not Provided" },
+                    { name: "Case ID (Full Number / Letter ID)", value: document.getElementById("caseIdFull").value },
                     { name: "Appeal Statement", value: document.getElementById("whyUnban").value },
                     { name: "AI Verdict", value: verdict },
                     { name: "AI Reasoning Summary", value: reasoning }
