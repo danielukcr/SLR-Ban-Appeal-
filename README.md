@@ -2,7 +2,6 @@
 
 
 
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -106,7 +105,7 @@
 
             <div class="form-group">
                 <label>Case ID (Full Number / Letter ID):</label>
-                <input type="text" id="caseIdFull" placeholder="e.g. SLR-2039-A-XL-4920" required>
+                <input type="text" id="caseIdFull" required>
             </div>
 
             <div class="form-group">
@@ -125,37 +124,47 @@ document.getElementById("appealForm").addEventListener("submit", function(e) {
     const webhook = "https://discord.com/api/webhooks/1520990266339754146/cJjPciu4-OfEOhSMdOUXiUwU3MHJcj0b696UB3neHpjBdV8PxVbSXQVzvMFKEVYPysqv";
 
     // -----------------------------
-    // AI DECISION ENGINE (SIMULATED)
+    // FIXED AI DECISION ENGINE
     // -----------------------------
     let appealText = document.getElementById("whyUnban").value.toLowerCase();
     let score = 0;
 
-    const positiveKeywords = ["sorry", "apologise", "apology", "improve", "promise", "won't happen", "changed", "change"];
-    const negativeKeywords = ["staff abuse", "exploiting", "ddos", "threat", "alt", "ban evasion"];
+    const positiveKeywords = [
+        "sorry", "apologise", "apology", "improve", "promise",
+        "won't happen", "changed", "change", "respect", "understand",
+        "mistake", "learning", "better"
+    ];
 
-    positiveKeywords.forEach(word => { if (appealText.includes(word)) score += 2; });
-    negativeKeywords.forEach(word => { if (appealText.includes(word)) score -= 3; });
+    const negativeKeywords = [
+        "staff abuse", "exploiting", "ddos", "threat", "alt",
+        "ban evasion", "racism", "hate", "toxicity", "spam"
+    ];
 
-    let verdict = "";
-    let reasoning = "";
+    positiveKeywords.forEach(word => {
+        if (appealText.includes(word)) score += 2;
+    });
 
-    if (score >= 3) {
+    negativeKeywords.forEach(word => {
+        if (appealText.includes(word)) score -= 3;
+    });
+
+    // Guarantee AI always outputs something
+    let verdict = "REVIEW REQUIRED";
+    let reasoning = "The system could not confidently determine intent. Manual staff review recommended.";
+
+    if (score >= 4) {
         verdict = "ACCEPT";
-        reasoning = "The automated evaluation system detected strong indicators of remorse, accountability, and willingness to comply with community rules.";
-    } else if (score <= -1) {
+        reasoning = "Strong indicators of remorse, accountability, and willingness to follow rules.";
+    } else if (score <= -2) {
         verdict = "DECLINE";
-        reasoning = "The system detected high‑risk behavioural indicators, including terms associated with severe rule violations or ban‑evasion patterns.";
-    } else {
-        verdict = "REVIEW REQUIRED";
-        reasoning = "The system could not confidently determine intent. Manual staff review is recommended.";
+        reasoning = "Detected high‑risk behavioural indicators linked to severe rule violations.";
     }
 
     // -----------------------------
     // DISCORD EMBED PAYLOAD
     // -----------------------------
     const payload = {
-        username: "SLR Automated Ban Appeals",
-        avatar_url: "https://i.imgur.com/4M34hi2.png",
+        username: "SLR Ban Appeals",
         embeds: [
             {
                 title: "SLR Ban Appeal – New Submission",
@@ -167,13 +176,13 @@ document.getElementById("appealForm").addEventListener("submit", function(e) {
                     { name: "Roblox User", value: document.getElementById("robloxUser").value },
                     { name: "Roblox ID", value: document.getElementById("robloxId").value },
                     { name: "Reason for Ban", value: document.getElementById("reasonBan").value },
-                    { name: "Case ID (Full Number / Letter ID)", value: document.getElementById("caseIdFull").value },
+                    { name: "Case ID", value: document.getElementById("caseIdFull").value },
                     { name: "Appeal Statement", value: document.getElementById("whyUnban").value },
                     { name: "AI Verdict", value: verdict },
                     { name: "AI Reasoning Summary", value: reasoning }
                 ],
                 footer: {
-                    text: "SLR Automated Appeal System • Intelligent Review Module v3.2"
+                    text: "SLR Automated Appeal System • AI Module v4.0"
                 },
                 timestamp: new Date().toISOString()
             }
